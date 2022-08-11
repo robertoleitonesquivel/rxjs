@@ -1,1 +1,50 @@
-/* You can add global styles to this file, and also import other style files */
+
+
+
+*{
+  margin: 0%;
+  padding: 0%;
+  box-sizing: border-box;
+}
+
+.mat-snackbar{
+  background: red;
+}
+
+
+/******* MAT SNACK BAR *******/
+.mat-snack-bar-container {
+  span {
+    color: white;
+  }
+}
+.mat-snack-bar-container.success {
+  background: #388e3c;
+}
+.mat-snack-bar-container.error {
+  background: #e53935;
+}
+.mat-snack-bar-container.warning {
+  background: #e5b235;
+}
+
+.mat-snack-bar-container.information {
+  background: #3f85ee;
+}
+
+embed{
+  height: 300px;
+  width: 90%;
+}
+
+div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+mat-card-content{
+  height: 500px;
+}
+
+
