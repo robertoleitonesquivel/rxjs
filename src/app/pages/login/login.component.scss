@@ -1,0 +1,22 @@
+.container{
+  margin: auto;
+  width: 50%;
+  box-sizing: border-box;
+  background: #B0BEC5 ;
+
+  .header{
+    text-align: center;
+    color: red;
+    font-weight: bold;
+  }
+
+  .content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .form-group{
+      margin: 10px;
+    }
+  }
+}
