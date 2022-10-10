@@ -13,6 +13,7 @@ import { MaterialModule } from './shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TeacherComponent } from './Components/Teacher/teacher.component';
+import { UDFsComponent } from './Components/udfs/udfs.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { TeacherComponent } from './Components/Teacher/teacher.component';
     ClientComponent,
     StudentComponent,
     SpinnerComponent,
-    TeacherComponent
+    TeacherComponent,
+    UDFsComponent
   ],
   imports: [
     BrowserModule,

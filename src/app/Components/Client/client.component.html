@@ -1,4 +1,4 @@
-<h1>CLIENTE</h1>
+<!-- <h1>CLIENTE</h1>
 
 <table>
   <thead>
@@ -20,4 +20,54 @@
   <mat-tab label="First"> Content 1 </mat-tab>
   <mat-tab label="Second"> Content 2 </mat-tab>
   <mat-tab label="Third"> Content 3 </mat-tab>
-</mat-tab-group>
+</mat-tab-group> -->
+
+<!-- <div [formGroup]="form">
+  <div formArrayName="dinamic">
+    <div *ngFor="let lessonForm of insert.controls; let i = index" style="margin:10px; display: flex; flex-wrap: wrap;">
+      <div style="width:80%">
+        <input matInput [formControlName]="i" placeholder="Lesson title">
+        <mat-error *ngIf="lessonForm.errors?.['required'] && submit">
+          El campo {{i}} es requerido
+        </mat-error>
+      </div>
+    </div>
+
+  </div>
+
+  <button mat-raised-button color="primary" (click)="Add()" type="button">Add</button>
+
+</div>-->
+
+<form [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>fgh</mat-label>
+    <input matInput type="text" formControlName="ID">
+
+  </mat-form-field>
+  <div class="flex">
+    <ng-container *ngFor="let item of listData" [ngSwitch]="item.Type">
+      <div class="w-100">
+        <mat-form-field *ngSwitchCase="'text'" appearance="fill">
+          <mat-label>{{item.Description}}</mat-label>
+          <input matInput type="text" [formControlName]="item.Name">
+          <mat-error *ngIf="form.controls[item.Name].errors?.['required']">
+            El {{item.Description}} es requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="w-100">
+        <mat-form-field *ngSwitchCase="'number'" appearance="fill">
+          <mat-label>{{item.Description}}</mat-label>
+          <input matInput type="number" [formControlName]="item.Name">
+          <mat-error *ngIf="form.controls[item.Name].errors?.['required']">
+            El {{item.Description}} es requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+    </ng-container>
+  </div>
+
+  <button mat-raised-button color="primary" (click)="Add()" type="button">Add</button>
+</form>

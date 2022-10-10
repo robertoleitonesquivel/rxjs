@@ -1,0 +1,14 @@
+<div [ngSwitch]="udfs.Type">
+  <div *ngSwitchCase="'DateTime'" >
+    <input type="date" [formControl]="datetime" (blur)="add()" />
+  </div>
+  <div *ngSwitchCase="'text'">
+    <input type="text" [formControl]="text" (blur)="add()" />
+  </div>
+  <div *ngSwitchCase="'number'" >
+
+  </div>
+  <div *ngSwitchCase="'select'">
+
+  </div>
+</div>
