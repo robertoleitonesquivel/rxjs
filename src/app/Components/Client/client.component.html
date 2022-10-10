@@ -40,32 +40,39 @@
 </div>-->
 
 <form [formGroup]="form">
-  <mat-form-field appearance="outline">
-    <mat-label>fgh</mat-label>
-    <input matInput type="text" formControlName="ID">
-
-  </mat-form-field>
   <div class="flex">
     <ng-container *ngFor="let item of listData" [ngSwitch]="item.Type">
-      <div class="w-100">
-        <mat-form-field *ngSwitchCase="'text'" appearance="fill">
+      <div *ngSwitchCase="'text'" class="col-3">
+        <mat-form-field appearance="fill" class="w-100">
           <mat-label>{{item.Description}}</mat-label>
           <input matInput type="text" [formControlName]="item.Name">
           <mat-error *ngIf="form.controls[item.Name].errors?.['required']">
-            El {{item.Description}} es requerido
+            El campo {{item.Description}} es requerido
           </mat-error>
         </mat-form-field>
       </div>
-      <div class="w-100">
-        <mat-form-field *ngSwitchCase="'number'" appearance="fill">
+      <div *ngSwitchCase="'number'" class="col-3">
+        <mat-form-field appearance="fill" class="w-100">
           <mat-label>{{item.Description}}</mat-label>
           <input matInput type="number" [formControlName]="item.Name">
           <mat-error *ngIf="form.controls[item.Name].errors?.['required']">
-            El {{item.Description}} es requerido
+            El campo {{item.Description}} es requerido
           </mat-error>
         </mat-form-field>
       </div>
-
+      <div *ngSwitchCase="'select'" class="col-3">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>{{item.Description}}</mat-label>
+          <mat-select type="text" [formControlName]="item.Name">
+            <mat-option>
+              Opción 1
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.controls[item.Name].errors?.['required']">
+            El campo {{item.Description}} es requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
     </ng-container>
   </div>
 

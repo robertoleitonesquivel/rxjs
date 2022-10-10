@@ -23,7 +23,9 @@ export class ClientComponent {
   @ViewChild('tabs', { static: true }) tabs!: MatTabGroup;
 
   listData = [{ Name: 'ID', Description: 'Id', Required: false, Type: 'number', Value: 0 },
-  { Name: 'NAME', Description: 'Nombre', Required: true, Type: 'text', Value: '' }];
+  { Name: 'NAME', Description: 'Nombre', Required: true, Type: 'text', Value: '' },
+  { Name: 'AGE', Description: 'Edad', Required: true, Type: 'number', Value: '' },
+  { Name: 'IDTYPE', Description: 'Tipo de indentificación', Required: true, Type: 'select', Value: '' }];
 
   listUDFs: UDFs[] = []
   listUDFsTarget: UDFsTarget[] = [];
