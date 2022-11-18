@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, concatMap, delay, forkJoin, from, map, mergeMap, observable, Observable, of, Subject, switchMap, tap } from 'rxjs';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { BehaviorSubject, catchError, combineLatest, concatMap, debounceTime, delay, distinctUntilChanged, filter, finalize, forkJoin, from, fromEvent, map, mergeMap, observable, Observable, of, pipe, startWith, Subject, switchMap, tap } from 'rxjs';
 import { HaciendaService } from 'src/app/core/services/hacienda.service';
+import { SearchService } from 'src/app/core/services/search.service';
 
 @Component({
   selector: 'app-operadores',
@@ -12,15 +15,111 @@ export class OperadoresComponent implements OnInit {
   subject$ = new Subject<any>();
   bsubject$ = new BehaviorSubject<any>(null);
 
+  frmInput = new FormControl('');
 
-  constructor(private haciendaSVC: HaciendaService) { }
+  list!: Observable<string[]>;
+  qty!: Observable<number>;
+
+  options: User[] = [{ ID: 1, Name: '086581017316' }, { ID: 2, Name: 'Wendy' }, { ID: 3, Name: 'Fabiola' }];
+  filteredOptions!: Observable<User[]>;
+
+
+
+  @ViewChild('searchBtn', { static: true }) searchBtn!: ElementRef;
+  @ViewChild('auto', { static: true }) autoCompleteEvent!: ElementRef;
+  @ViewChild('scanner', { static: true }) scanner!: ElementRef;
+
+  constructor(
+    private haciendaSVC: HaciendaService,
+    private searchService: SearchService
+  ) { }
 
   ngOnInit(): void {
 
     this.onLoad();
   }
 
+  private _filter(value: string): User[] {
+    const filterValue = value.toLowerCase();
+    return this.options.filter(option => option.Name.toLowerCase().includes(filterValue));
+  }
+
   private onLoad() {
+
+    //Este metodo cancela las peticiones al servidor si no han terminado
+    //this.searchFromEvent();
+
+    //Este metodo se ejecuta cuando se selecciona el select
+    //this.onChangeSelect();
+
+    //this.EventAutoComplete();
+
+    this.filteredOptions = this.frmInput.valueChanges.pipe(
+      startWith(''),
+      map(value => (typeof value === 'string' ? value : value.Name)),
+      map(Name => (Name ? this._filter(Name) : this.options.slice())),
+    );
+
+    this.frmInput.valueChanges.pipe(
+      filter((res: any) => res instanceof Object),
+      tap(res => this.frmInput.setValue('')),
+      concatMap(res => this.searchService.getData('Roberto')),
+      tap(res => console.log(res)),
+      filter((res: string[]) => res && res.length > 0),
+      switchMap(res => this.searchService.getCount('Roberto')),
+      tap(res => console.log(res)),
+      finalize(() => console.log('res'))
+    ).subscribe();
+
+    // this.frmInput.valueChanges.pipe(
+    //   filter((res: any) => res instanceof Object),
+    //   tap(res => this.frmInput.setValue('')),
+    //   concatMap(res => this.searchService.getData('Roberto').pipe(
+    //     switchMap(res => this.searchService.getCount('Roberto')),
+    //     tap(res => console.log(res)),
+    //   )),
+    //   tap(res => console.log(res)),
+    //  // filter((res: string[]) => res && res.length > 0),
+    //   finalize(() => console.log('res'))
+    // ).subscribe();
+
+    // this.frmInput.valueChanges.pipe(
+    //   tap(res => console.log(res)),
+    //   filter((res: any) => typeof res  === 'string'),
+    //   tap(res => this.frmInput.setValue('')),
+    //   tap(res => console.log(res))
+    // ).subscribe();
+
+    // fromEvent(this.scanner.nativeElement, 'keyup').pipe(
+    //   tap((res: any) => console.log(res.key, res.target.value)),
+    //   filter((res: any) => res.key === 'Enter'),
+    //   debounceTime(500),
+    //   tap(res => console.log(res, res.target.value))
+    // ).subscribe();
+
+
+
+    // this.list = this.frmInput.valueChanges.pipe(
+    //   filter(res => res.length > 3),
+    //   distinctUntilChanged(),
+    //   debounceTime(350),
+    //   switchMap(res => this.searchService.getData(res)),
+    //   catchError(error => {
+    //     console.log(error)
+    //     return of([]);
+    //   })
+    // );
+
+    // this.qty = this.frmInput.valueChanges.pipe(
+    //   filter(res => res.length > 3),
+    //   distinctUntilChanged(),
+    //   debounceTime(350),
+    //   switchMap(res => this.searchService.getCount(res)),
+    //   catchError(error => {
+    //     console.log(error)
+    //     return of(0);
+    //   })
+    // );
 
     //let oserver = this.haciendaSVC.first();
     // this.haciendaSVC.second());
@@ -99,4 +198,44 @@ export class OperadoresComponent implements OnInit {
 
   }
 
+  public search(): void {
+    // of(1).pipe(
+    //   switchMap(res => this.searchService.getData('Roberto'))
+    // )
+    //   .subscribe((res) => console.log());
+  }
+
+  public searchFromEvent(): void {
+    fromEvent(this.searchBtn.nativeElement, 'click').pipe(
+      switchMap(res => this.searchService.getData('Roberto'))
+    ).subscribe((res) => console.log(res));
+  }
+
+  public onChangeSelect(): void {
+    this.frmInput.valueChanges.pipe(
+      tap(res => console.log(res)),
+      switchMap(res => this.searchService.getData('Roberto'))
+    ).subscribe((res) => console.log(res));
+  }
+
+  public optionSelected(value: User, event: MatAutocompleteSelectedEvent): void {
+    // console.log(value);
+  }
+
+  public EventAutoComplete(): void {
+    fromEvent(this.autoCompleteEvent.nativeElement, 'MatAutocompleteSelectedEvent').pipe(
+      tap(res => console.log(res)),
+      switchMap(res => this.searchService.getData('Roberto'))
+    ).subscribe((res) => console.log(res));
+  }
+
+  public displayFn(user: User): string {
+    return user && user.Name ? user.Name : '';
+  }
+
+}
+
+export interface User {
+  ID: number;
+  Name: string;
 }

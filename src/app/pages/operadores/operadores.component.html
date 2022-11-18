@@ -1,1 +1,29 @@
 <p>operadores works!</p>
+
+<!-- <input type="text" [formControl]="frmInput" placeholder="Buscar"> -->
+
+<div *ngFor="let i of list | async">
+  {{i}}
+</div>
+{{qty | async}}
+
+<button (click)="search()" #searchBtn>
+  Buscar
+</button>
+
+<!-- <select [formControl]="frmInput">
+  <option value="1">Primero</option>
+  <option value="2">Segundo</option>
+</select> -->
+<br><br><br>
+<mat-card>
+  <mat-form-field appearance="outline">
+    <mat-label>Number</mat-label>
+    <input type="text" matInput #scanner [formControl]="frmInput" [matAutocomplete]="auto">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        {{option.Name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</mat-card>
